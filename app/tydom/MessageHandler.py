@@ -299,7 +299,7 @@ device_conso_unit_of_measurement = {
     "energyIndexHeatWatt": "Wh",
     "energyIndexECSWatt": "Wh",
     "energyIndexHeatGas": "Wh",
-    "outTemperature": "C",
+    "outTemperature": "°C",
 }
 device_conso_keywords = device_conso_classes.keys()
 
