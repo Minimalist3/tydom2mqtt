@@ -195,6 +195,11 @@ deviceBoilerKeywords = [
     "anticipCoeff",
     "outTemperature",
 ]
+deviceTywellControlKeywords = [
+    "ambientTemperature",
+    "hygroIn",
+    "battLevel",
+]
 
 deviceShHvacKeywords = [
     # from /devices/data
@@ -272,6 +277,7 @@ device_conso_classes = {
     "energyIndexECSWatt": "energy",
     "energyIndexHeatGas": "energy",
     "outTemperature": "temperature",
+    "ambientTemperature": "temperature",
 }
 
 device_conso_unit_of_measurement = {
@@ -300,6 +306,7 @@ device_conso_unit_of_measurement = {
     "energyIndexECSWatt": "Wh",
     "energyIndexHeatGas": "Wh",
     "outTemperature": "°C",
+    "ambientTemperature": "°C",
 }
 device_conso_keywords = device_conso_classes.keys()
 
@@ -470,6 +477,7 @@ class MessageHandler:
                 i["last_usage"] == "boiler"
                 or i["last_usage"] == "conso"
                 or i["last_usage"] == "sh_hvac"
+                or i["last_usage"] == "re2020ControlBoiler"
             ):
                 device_name[device_unique_id] = i["name"]
                 device_type[device_unique_id] = i["last_usage"]
@@ -785,6 +793,37 @@ class MessageHandler:
                             new_conso = Sensor(
                                 elem_name=element_name,
                                 tydom_attributes_payload=attr_conso,
+                                mqtt=self.mqtt_client,
+                            )
+                            await new_conso.update()
+
+                    if type_of_id == "re2020ControlBoiler":
+                        if (
+                            element_name in deviceTywellControlKeywords
+                            and element_validity == "upToDate"
+                        ):
+                            attr_tywell_control = {
+                                "device_id": device_id,
+                                "endpoint_id": endpoint_id,
+                                "id": str(device_id) + "_" + str(endpoint_id),
+                                "name": print_id,
+                                "device_type": "sensor",
+                                element_name: element_value,
+                            }
+
+                            if element_name in device_conso_classes:
+                                attr_conso["device_class"] = device_conso_classes[
+                                    element_name
+                                ]
+
+                            if element_name in device_conso_unit_of_measurement:
+                                attr_conso["unit_of_measurement"] = (
+                                    device_conso_unit_of_measurement[element_name]
+                                )
+
+                            new_conso = Sensor(
+                                elem_name=element_name,
+                                tydom_attributes_payload=attr_tywell_control,
                                 mqtt=self.mqtt_client,
                             )
                             await new_conso.update()
