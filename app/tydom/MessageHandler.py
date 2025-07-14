@@ -275,9 +275,11 @@ device_conso_classes = {
     "energyTotIndexWatt": "energy",
     "energyIndexHeatWatt": "energy",
     "energyIndexECSWatt": "energy",
+    "energyIndexCoolWatt": "energy",
     "energyIndexHeatGas": "energy",
     "outTemperature": "temperature",
     "ambientTemperature": "temperature",
+    "hygroIn": "humidity",
 }
 
 device_conso_unit_of_measurement = {
@@ -304,11 +306,19 @@ device_conso_unit_of_measurement = {
     "energyTotIndexWatt": "Wh",
     "energyIndexHeatWatt": "Wh",
     "energyIndexECSWatt": "Wh",
+    "energyIndexCoolWatt": "Wh",
     "energyIndexHeatGas": "Wh",
     "outTemperature": "°C",
     "ambientTemperature": "°C",
+    "hygroIn": "%",
 }
 device_conso_keywords = device_conso_classes.keys()
+
+device_conso_state_class = {
+    "energyIndexHeatWatt": "total_increasing",
+    "energyIndexECSWatt": "total_increasing",
+    "energyIndexCoolWatt": "total_increasing",
+}
 
 deviceSmokeKeywords = ["techSmokeDefect"]
 
@@ -788,6 +798,11 @@ class MessageHandler:
                             if element_name in device_conso_unit_of_measurement:
                                 attr_conso["unit_of_measurement"] = (
                                     device_conso_unit_of_measurement[element_name]
+                                )
+
+                            if element_name in device_conso_state_class:
+                                attr_conso["state_class"] = (
+                                    device_conso_state_class[element_name]
                                 )
 
                             new_conso = Sensor(
