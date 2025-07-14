@@ -801,9 +801,9 @@ class MessageHandler:
                                 )
 
                             if element_name in device_conso_state_class:
-                                attr_conso["state_class"] = (
-                                    device_conso_state_class[element_name]
-                                )
+                                attr_conso["state_class"] = device_conso_state_class[
+                                    element_name
+                                ]
 
                             new_conso = Sensor(
                                 elem_name=element_name,
@@ -827,9 +827,9 @@ class MessageHandler:
                             }
 
                             if element_name in device_conso_classes:
-                                attr_tywell_control["device_class"] = device_conso_classes[
-                                    element_name
-                                ]
+                                attr_tywell_control["device_class"] = (
+                                    device_conso_classes[element_name]
+                                )
 
                             if element_name in device_conso_unit_of_measurement:
                                 attr_tywell_control["unit_of_measurement"] = (
